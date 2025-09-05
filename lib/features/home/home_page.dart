@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../common_widgets/alarm_list.dart';
+import '../../common_widgets/add_alarm_button.dart';
+import '../../common_widgets/location_section.dart';
 
 class HomePage extends StatefulWidget {
   final Map<String, double>? location;
@@ -12,68 +16,121 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? address;
+  List<DateTime> alarms = [];
+  Map<int, bool> alarmStatus = {}; // track ON/OFF for each alarm
 
   @override
   void initState() {
     super.initState();
-    _getAddress();
+    loadAlarms(); // Load saved alarms when app starts
   }
 
-  Future<void> _getAddress() async {
-    final lat = widget.location?['latitude'];
-    final long = widget.location?['longitude'];
-
-    if (lat != null && long != null) {
-      try {
-        List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
-
-        if (placemarks.isNotEmpty) {
-          final place = placemarks.first;
-          setState(() {
-            address = "${place.street}, ${place.locality}, ${place.country}";
-          });
-        }
-      } catch (e) {
-        setState(() {
-          address = "Unable to get address";
-        });
-      }
-    } else {
+  // Load alarms from local storage
+  Future<void> loadAlarms() async {
+    final prefs = await SharedPreferences.getInstance();
+    final alarmsData = prefs.getString('alarms');
+    if (alarmsData != null) {
+      final decoded = jsonDecode(alarmsData) as List;
       setState(() {
-        address = "Location not available";
+        alarms = decoded.map((e) => DateTime.parse(e['time'])).toList();
+        alarmStatus = {
+          for (int i = 0; i < decoded.length; i++)
+            i: decoded[i]['isOn'] as bool,
+        };
       });
     }
   }
 
+  // Save alarms to local storage
+  Future<void> saveAlarms() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = alarms.asMap().entries.map((entry) {
+      return {
+        'time': entry.value.toIso8601String(),
+        'isOn': alarmStatus[entry.key] ?? true,
+      };
+    }).toList();
+    await prefs.setString('alarms', jsonEncode(data));
+  }
+
+  void setAddress(String newAddress) {
+    setState(() {
+      address = newAddress;
+    });
+  }
+
+  void addAlarm(DateTime alarm) {
+    setState(() {
+      alarms.add(alarm);
+      alarmStatus[alarms.length - 1] = true; // default ON
+    });
+    saveAlarms();
+  }
+
+  void toggleAlarm(int index, bool value) {
+    setState(() {
+      alarmStatus[index] = value;
+    });
+    saveAlarms();
+  }
+
+  void deleteAlarm(int index) {
+    setState(() {
+      alarms.removeAt(index);
+      alarmStatus.remove(index);
+
+      // Rebuild alarmStatus map to keep indexes consistent
+      final newStatus = <int, bool>{};
+      for (int i = 0; i < alarms.length; i++) {
+        newStatus[i] = alarmStatus[i] ?? true;
+      }
+      alarmStatus = newStatus;
+    });
+    saveAlarms();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final latitude = widget.location?['latitude']?.toStringAsFixed(6) ?? 'N/A';
-    final longitude =
-        widget.location?['longitude']?.toStringAsFixed(6) ?? 'N/A';
-
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 96),
-            const Text(
-              "Selected Location",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LocationSection(
+                  location: widget.location,
+                  address: address,
+                  onAddressChanged: setAddress,
+                ),
+                const SizedBox(height: 20),
+                AddAlarmButton(onAlarmAdded: addAlarm),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              "Lat: $latitude, Long: $longitude",
-              style: const TextStyle(fontSize: 18),
+          ),
+          const SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Alarms",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                AlarmList(
+                  alarms: alarms,
+                  alarmStatus: alarmStatus,
+                  onToggle: toggleAlarm,
+                  onDelete: deleteAlarm,
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              address ?? "Loading address...",
-              style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
