@@ -65,12 +65,10 @@ Each alarm is saved as a JSON string in key-value pairs, for example:
     {
       "time": "07:30",
       "date": "2025-09-07",
-      "label": "Morning Run"
     },
     {
       "time": "21:00",
       "date": "2025-09-07",
-      "label": "Study Reminder"
     }
   ]
 }
