@@ -28,7 +28,7 @@ A Flutter-based alarm application with location-aware features and persistent st
 
 1. **Clone the repository**  
    ```bash
-   git clone https://github.com/your-username/alarm.git
+   git clone https://github.com/abdulla30r/alarm_flutter.git
    cd alarm
    ```
 
