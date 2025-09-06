@@ -55,7 +55,8 @@ A Flutter-based alarm application with location-aware features and persistent st
 
 ## 🎥 Demo Video  
 
-[Watch the demo on Loom](https://www.loom.com/share/05678c9f8b7544849360824b802eeb26?sid=2167df2b-3327-4f8f-8384-852b0b9afd64)
+[![Watch the demo](https://cdn.loom.com/sessions/thumbnails/05678c9f8b7544849360824b802eeb26-00001.png)](https://www.loom.com/share/05678c9f8b7544849360824b802eeb26?sid=2167df2b-3327-4f8f-8384-852b0b9afd64)
+
 
 ---
 
