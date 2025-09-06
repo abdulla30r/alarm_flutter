@@ -46,11 +46,11 @@ A Flutter-based alarm application with location-aware features and persistent st
 
 ## 📸 Screenshots  
 
-| Home Page | Set Alarm | Location |
-|-----------|-----------|----------|
-| ![Home](assets/screenshots/home.png) | ![Set Alarm](assets/screenshots/set_alarm.png) | ![Location](assets/screenshots/location.png) |
-
-*(Place screenshots inside `assets/screenshots/` so they appear here.)*  
+<p align="center">
+  <img src="assets/screenshots/home.png" alt="Home" width="250"/>
+  <img src="assets/screenshots/set_alarm.png" alt="Set Alarm" width="250"/>
+  <img src="assets/screenshots/location.png" alt="Location" width="250"/>
+</p> 
 
 ---
 
