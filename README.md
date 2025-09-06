@@ -47,9 +47,14 @@ A Flutter-based alarm application with location-aware features and persistent st
 ## 📸 Screenshots  
 
 <p align="center">
-  <img src="assets/screenshots/home.png" alt="Home" width="250"/>
-  <img src="assets/screenshots/set_alarm.png" alt="Set Alarm" width="250"/>
-  <img src="assets/screenshots/location.png" alt="Location" width="250"/>
+  <img src="assets/screenshots/1.jpg" alt="Onboarding 1" width="250"/>
+  <img src="assets/screenshots/2.jpg" alt="Onboarding 2" width="250"/>
+  <img src="assets/screenshots/3.jpg" alt="Onboarding 3" width="250"/>
+</p> 
+
+<p align="center">
+  <img src="assets/screenshots/4.jpg" alt="Fetch Location" width="250"/>
+  <img src="assets/screenshots/5.jpg" alt="Alarm Page" width="250"/>
 </p> 
 
 
