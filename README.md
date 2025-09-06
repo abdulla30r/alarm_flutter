@@ -52,6 +52,11 @@ A Flutter-based alarm application with location-aware features and persistent st
   <img src="assets/screenshots/location.png" alt="Location" width="250"/>
 </p> 
 
+
+## 🎥 Demo Video  
+
+[Watch the demo on Loom](https://www.loom.com/share/05678c9f8b7544849360824b802eeb26?sid=2167df2b-3327-4f8f-8384-852b0b9afd64)
+
 ---
 
 ## 💾 How Storage Works  
